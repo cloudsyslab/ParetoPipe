@@ -11,7 +11,9 @@ Key Features:
 -Pareto Front Analysis: Systematically tests every valid partition point for a given model to collect latency and throughput data, then performs a Pareto analysis to identify the optimal set of trade-offs.
 
 -Dual Communication Backends: Features two communication backends to enable fine-grained analysis of runtime overhead:
+
   *PyTorch RPC: A high-level abstraction using PyTorch's built-in distributed communication framework.
+  
   *Custom TCP Sockets: A lightweight, low-level implementation to minimize overhead and provide finer execution control.
 
 -Network Condition Simulation: Integrates with tools like Linux tc to simulate real-world network imperfections, such as added latency and throttled bandwidth, allowing for robust performance analysis under duress.
