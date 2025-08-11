@@ -19,26 +19,34 @@ ParetoPipe is an open-source framework designed to systematically benchmark and 
 # Instructions to Run (Custom Implementation) 🧪⚙️
 1) Get the code & enter the folder
 
-   git clone https://github.com/cloudsyslab/ParetoPipe.git
-   
+   git clone https://github.com/cloudsyslab/ParetoPipe.git\
    cd ParetoPipe/custom_implementation/Pareto
 
 3) Create environments
 
-A. GPU server (Lambda)
-
-
+A. GPU server (Lambda)\
 conda create -n pareto python=3.10 -y\
 conda activate pareto\
-pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121 
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121 \
+pip install -r requirements.txt \
+pip install numpy pillow psutil pynvml pandas matplotlib\
+B. Raspberry Pi\
+python3 -m venv ~/venvs/pareto\
+source ~/venvs/pareto/bin/activate\
 
-pip install -r requirements.txt  # if present
-pip install numpy pillow psutil pynvml pandas matplotlib
-
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu\
+pip install -r requirements.txt\
+pip install numpy pillow psutil pandas\
 
 4) Network & paths (set once)
-5) Start the server (Part 1) on the GPU machine
-6) Start the client (Part 2) on the Pi
+
+export PI1_IP= your ip\
+export PI2/GPU_IP= your ip\
+export PORT= 111(your wish)\
+export OUT_BASE=~/pareto/results (any writable folder)\
+mkdir -p $OUT_BASE\
+
+5) Connection pi1 to pi2 or gpu by running 
 7) (Optional) Sweep multiple splits
 8) Simulate network delay and bandwidth
 9) Troubleshooting
