@@ -47,18 +47,19 @@ ParetoPipe is an open-source framework designed to systematically benchmark and 
    mkdir -p $OUT_BASE\
 
 5) Connection pi1 to pi2 or gpu by running ./pareto.sh
-7) (Optional) Sweep multiple splits : For getting best result you run 5 times and collecting the data.
-8) Simulate network delay and bandwidth
+6) (Optional) Sweep multiple splits : For getting best result you run 5 times and collecting the data.
+7) Simulate network delay and bandwidth
    Run on the Pi (change eth0 to your NIC if needed):\
    sudo tc qdisc del dev eth0 root 2>/dev/null || true (clear any existing rules)\
    sudo tc qdisc add dev eth0 root handle 1: netem delay 200ms (add delay & limit bandwidth (example: 200ms delay, 5mbit))\
    sudo tc qdisc add dev eth0 parent 1: handle 10: tbf rate 5mbit burst 32kbit latency 400ms\
    tc qdisc show dev eth0(verify)\
-10) Troubleshooting
+8) Troubleshooting
    ->Client hangs / “connection refused” → start server first; check $SERVER_IP & $PORT; wait 2–5s before client;\
    ->GPU util ~0% → ensure part1 and its inputs are on CUDA (.to('cuda')); try larger --batch-size;\
    ->Shape mismatch → confirm identical transforms on both sides; print tensor shapes right after the split;\
    ->Port busy → kill old server/tmux or fuser -k $PORT/tcp;\
    ->InceptionV3 errors → use --input-size 299 and aux_logits=False in the model init;\
-11) One-shot example (MobileNetV2 + 200 ms delay) for test
+9) One-shot example (MobileNetV2 + 200 ms delay) for test
       Simply navigate and follow the above instruction as well as run ./pareto.sh remember that to have the file mobilenet_pi1.py and mobilenet_pi2.py, save the results on json files.
+10) Finally, just wait to see the output results.
