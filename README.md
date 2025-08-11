@@ -1,8 +1,8 @@
-# ParetoPipe 📈🛤️
+### ParetoPipe 📈🛤️
 
 ParetoPipe is an open-source framework designed to systematically benchmark and analyze the performance of distributed Deep Neural Network (DNN) inference across heterogeneous edge devices. This tool was developed for the research paper, "Where to Split? A Pareto-Front Analysis of DNN Partitioning for Edge Inference". The core mission of ParetoPipe is to reframe DNN partitioning as a multi-objective optimization problem. Instead of focusing on a single metric like latency or throughput, our framework allows researchers and practitioners to explore the complex trade-off between these competing objectives. By identifying the Pareto frontier, ParetoPipe helps find all optimal partitioning strategies where one metric cannot be improved without degrading another.
 
-# Key Features:
+### Key Features:
 
 1. Pipeline Parallelism: Implements pipeline parallelism to distribute sequential segments of a DNN across a network of devices, making it ideal for edge topologies.
 
@@ -24,7 +24,7 @@ ParetoPipe is an open-source framework designed to systematically benchmark and 
 - **Pragathi Durga Rajarajan** – [durga.rajarajan@my.utsa.edu](mailto:durga.rajarajan@my.utsa.edu) – *(Current Contributor)*
 
 ---
-# Instructions to Run (Custom Implementation) 🧪⚙️
+### Instructions to Run (Custom Implementation) 🧪⚙️
 1) Get the code & enter the folder
 
    git clone https://github.com/cloudsyslab/ParetoPipe.git\
@@ -72,4 +72,4 @@ ParetoPipe is an open-source framework designed to systematically benchmark and 
 9) One-shot example (MobileNetV2 + 200 ms delay) for test
       Simply navigate and follow the above instruction as well as run ./pareto.sh remember that to have the file mobilenet_pi1.py and mobilenet_pi2.py, save the results on json files.
 10) Finally, just wait to see the output results.
-
+---
