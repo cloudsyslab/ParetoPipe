@@ -4,18 +4,18 @@ ParetoPipe is an open-source framework designed to systematically benchmark and 
 
 # Key Features:
 
--Pipeline Parallelism: Implements pipeline parallelism to distribute sequential segments of a DNN across a network of devices, making it ideal for edge topologies.
+1. Pipeline Parallelism: Implements pipeline parallelism to distribute sequential segments of a DNN across a network of devices, making it ideal for edge topologies.
 
--Heterogeneous Device Support: Explicitly designed to benchmark performance on heterogeneous testbeds, such as configurations between two Raspberry Pis (edge-to-edge) or a Raspberry Pi and a GPU-equipped server (edge-to-server).
+2. Heterogeneous Device Support: Explicitly designed to benchmark performance on heterogeneous testbeds, such as configurations between two Raspberry Pis (edge-to-edge) or a Raspberry Pi and a GPU-equipped server (edge-to-server).
 
--Pareto Front Analysis: Systematically tests every valid partition point for a given model to collect latency and throughput data, then performs a Pareto analysis to identify the optimal set of trade-offs.
--Network Condition Simulation: Integrates with tools like Linux tc to simulate real-world network imperfections, such as added latency and throttled bandwidth, allowing for robust performance analysis under duress.
--Dual Communication Backends: Features two communication backends to enable fine-grained analysis of runtime overhead:
+3. Pareto Front Analysis: Systematically tests every valid partition point for a given model to collect latency and throughput data, then performs a Pareto analysis to identify the optimal set of trade-offs.
+
+4. Network Condition Simulation: Integrates with tools like Linux tc to simulate real-world network imperfections, such as added latency and throttled bandwidth, allowing for robust performance analysis under duress.
+   
+5. Dual Communication Backends: Features two communication backends to enable fine-grained analysis of runtime overhead:
 
   *PyTorch RPC: A high-level abstraction using PyTorch's built-in distributed communication framework.
   
   *Custom TCP Sockets: A lightweight, low-level implementation to minimize overhead and provide finer execution control.
-
-
 
 ---
