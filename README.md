@@ -49,6 +49,7 @@ ParetoPipe is an open-source framework designed to systematically benchmark and 
 5) Connection pi1 to pi2 or gpu by running ./pareto.sh
 6) (Optional) Sweep multiple splits : For getting best result you run 5 times and collecting the data.
 7) Simulate network delay and bandwidth
+   ```bash
    Run on the Pi (change eth0 to your NIC if needed):\
    sudo tc qdisc del dev eth0 root 2>/dev/null || true (clear any existing rules)\
    sudo tc qdisc add dev eth0 root handle 1: netem delay 200ms (add delay & limit bandwidth (example: 200ms delay, 5mbit))\
@@ -63,5 +64,4 @@ ParetoPipe is an open-source framework designed to systematically benchmark and 
 9) One-shot example (MobileNetV2 + 200 ms delay) for test
       Simply navigate and follow the above instruction as well as run ./pareto.sh remember that to have the file mobilenet_pi1.py and mobilenet_pi2.py, save the results on json files.
 10) Finally, just wait to see the output results.
-```bash
-python3 kube_test.py
+
