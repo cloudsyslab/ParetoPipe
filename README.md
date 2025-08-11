@@ -16,6 +16,14 @@ ParetoPipe is an open-source framework designed to systematically benchmark and 
 6. Dual Communication Backends: Features two communication backends to enable fine-grained analysis of runtime overhead: i) PyTorch RPC: A high-level abstraction using PyTorch's built-in distributed communication framework; ii) Custom TCP Sockets: A lightweight, low-level implementation to minimize overhead and provide finer execution control.
 
 ---
+### Author/Contact Information 📞
+
+- **Dr. Palden Lama** – [palden.lama@utsa.edu](mailto:palden.lama@utsa.edu) – *(Current Contributor)*
+- **Adiba Masud** – [adiba.masud@my.utsa.edu](mailto:adiba.masud@my.utsa.edu) – *(Current Contributor)*
+- **Nicholas Foley** – [nicholas.foley@my.utsa.edu](mailto:nicholas.foley@my.utsa.edu) – *(Current Contributor)*
+- **Pragathi Durga Rajarajan** – [durga.rajarajan@my.utsa.edu](mailto:durga.rajarajan@my.utsa.edu) – *(Current Contributor)*
+
+---
 # Instructions to Run (Custom Implementation) 🧪⚙️
 1) Get the code & enter the folder
 
@@ -24,7 +32,7 @@ ParetoPipe is an open-source framework designed to systematically benchmark and 
 
 3) Create environments
 
-   A. GPU server (Lambda)\
+   A. GPU server\
    conda create -n pareto python=3.10 -y\
    conda activate pareto\
    pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121 \
@@ -50,11 +58,11 @@ ParetoPipe is an open-source framework designed to systematically benchmark and 
 6) (Optional) Sweep multiple splits : For getting best result you run 5 times and collecting the data.
 7) Simulate network delay and bandwidth
    ```bash
-   Run on the Pi (change eth0 to your NIC if needed):\
-   sudo tc qdisc del dev eth0 root 2>/dev/null || true (clear any existing rules)\
-   sudo tc qdisc add dev eth0 root handle 1: netem delay 200ms (add delay & limit bandwidth (example: 200ms delay, 5mbit))\
-   sudo tc qdisc add dev eth0 parent 1: handle 10: tbf rate 5mbit burst 32kbit latency 400ms\
-   tc qdisc show dev eth0(verify)\
+   #Run on the Pi (change eth0 to your NIC if needed)
+   sudo tc qdisc del dev eth0 root 2>/dev/null || true #clear any existing rules
+   sudo tc qdisc add dev eth0 root handle 1: netem delay 200ms #add delay & limit bandwidth (example: 200ms delay, 5mbit)
+   sudo tc qdisc add dev eth0 parent 1: handle 10: tbf rate 5mbit burst 32kbit latency 400ms
+   tc qdisc show dev eth0 #verify
 8) Troubleshooting
    ->Client hangs / “connection refused” → start server first; check $SERVER_IP & $PORT; wait 2–5s before client;\
    ->GPU util ~0% → ensure part1 and its inputs are on CUDA (.to('cuda')); try larger --batch-size;\
