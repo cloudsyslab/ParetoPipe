@@ -4,15 +4,11 @@ ParetoPipe is an open-source framework designed to systematically benchmark and 
 
 ### Key Features:
 
-1. Pipeline Parallelism: Implements pipeline parallelism to distribute sequential segments of a DNN across a network of devices, making it ideal for edge topologies.
-
-2. Heterogeneous Device Support: Explicitly designed to benchmark performance on heterogeneous testbeds, such as configurations between two Raspberry Pis (edge-to-edge) or a Raspberry Pi and a GPU-equipped server (edge-to-server).
-
-3. Pareto Front Analysis: Systematically tests every valid partition point for a given model to collect latency and throughput data, then performs a Pareto analysis to identify the optimal set of trade-offs.
-
-4. Network Condition Simulation: Integrates with tools like Linux tc to simulate real-world network imperfections, such as added latency and throttled bandwidth, allowing for robust
-5. performance analysis under duress.
-   
+1. Pipeline Parallelism: Implements pipeline parallelism to distribute sequential segments of a DNN across a network of devices, making it ideal for edge topologies;\
+2. Heterogeneous Device Support: Explicitly designed to benchmark performance on heterogeneous testbeds, such as configurations between two Raspberry Pis (edge-to-edge) or a Raspberry Pi and a GPU-equipped server (edge-to-server);\
+3. Pareto Front Analysis: Systematically tests every valid partition point for a given model to collect latency and throughput data, then performs a Pareto analysis to identify the optimal set of trade-offs;\
+4. Network Condition Simulation: Integrates with tools like Linux tc to simulate real-world network imperfections, such as added latency and throttled bandwidth, allowing for robust;\
+5. performance analysis under duress;\
 6. Dual Communication Backends: Features two communication backends to enable fine-grained analysis of runtime overhead: i) PyTorch RPC: A high-level abstraction using PyTorch's built-in distributed communication framework; ii) Custom TCP Sockets: A lightweight, low-level implementation to minimize overhead and provide finer execution control.
 
 ---
@@ -68,7 +64,7 @@ ParetoPipe is an open-source framework designed to systematically benchmark and 
    ->GPU util ~0% → ensure part1 and its inputs are on CUDA (.to('cuda')); try larger --batch-size;\
    ->Shape mismatch → confirm identical transforms on both sides; print tensor shapes right after the split;\
    ->Port busy → kill old server/tmux or fuser -k $PORT/tcp;\
-   ->InceptionV3 errors → use --input-size 299 and aux_logits=False in the model init;\
+   ->InceptionV3 errors → use --input-size 299 and aux_logits=False in the model init;
 9) One-shot example (MobileNetV2 + 200 ms delay) for test
       Simply navigate and follow the above instruction as well as run ./pareto.sh remember that to have the file mobilenet_pi1.py and mobilenet_pi2.py, save the results on json files.
 10) Finally, just wait to see the output results.
