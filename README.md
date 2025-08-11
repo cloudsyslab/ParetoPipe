@@ -72,4 +72,3 @@ ParetoPipe is an open-source framework designed to systematically benchmark and 
 9) One-shot example (MobileNetV2 + 200 ms delay) for test
       Simply navigate and follow the above instruction as well as run ./pareto.sh remember that to have the file mobilenet_pi1.py and mobilenet_pi2.py, save the results on json files.
 10) Finally, just wait to see the output results.
----
