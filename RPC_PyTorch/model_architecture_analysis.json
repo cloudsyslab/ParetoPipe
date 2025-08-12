@@ -1,0 +1,1229 @@
+{
+  "resnet18": {
+    "model_name": "resnet18",
+    "total_parameters": 11689512,
+    "top_level_modules": {
+      "conv1": {
+        "type": "Conv2d",
+        "parameters": 9408,
+        "is_sequential": false,
+        "num_children": 0,
+        "children_types": []
+      },
+      "bn1": {
+        "type": "BatchNorm2d",
+        "parameters": 128,
+        "is_sequential": false,
+        "num_children": 0,
+        "children_types": []
+      },
+      "relu": {
+        "type": "ReLU",
+        "parameters": 0,
+        "is_sequential": false,
+        "num_children": 0,
+        "children_types": []
+      },
+      "maxpool": {
+        "type": "MaxPool2d",
+        "parameters": 0,
+        "is_sequential": false,
+        "num_children": 0,
+        "children_types": []
+      },
+      "layer1": {
+        "type": "Sequential",
+        "parameters": 147968,
+        "is_sequential": true,
+        "num_children": 2,
+        "children_types": [
+          "BasicBlock"
+        ],
+        "num_blocks": 2,
+        "block_types": [
+          "BasicBlock",
+          "BasicBlock"
+        ]
+      },
+      "layer2": {
+        "type": "Sequential",
+        "parameters": 525568,
+        "is_sequential": true,
+        "num_children": 2,
+        "children_types": [
+          "BasicBlock"
+        ],
+        "num_blocks": 2,
+        "block_types": [
+          "BasicBlock",
+          "BasicBlock"
+        ]
+      },
+      "layer3": {
+        "type": "Sequential",
+        "parameters": 2099712,
+        "is_sequential": true,
+        "num_children": 2,
+        "children_types": [
+          "BasicBlock"
+        ],
+        "num_blocks": 2,
+        "block_types": [
+          "BasicBlock",
+          "BasicBlock"
+        ]
+      },
+      "layer4": {
+        "type": "Sequential",
+        "parameters": 8393728,
+        "is_sequential": true,
+        "num_children": 2,
+        "children_types": [
+          "BasicBlock"
+        ],
+        "num_blocks": 2,
+        "block_types": [
+          "BasicBlock",
+          "BasicBlock"
+        ]
+      },
+      "avgpool": {
+        "type": "AdaptiveAvgPool2d",
+        "parameters": 0,
+        "is_sequential": false,
+        "num_children": 0,
+        "children_types": []
+      },
+      "fc": {
+        "type": "Linear",
+        "parameters": 513000,
+        "is_sequential": false,
+        "num_children": 0,
+        "children_types": []
+      }
+    },
+    "has_sequential_structure": false,
+    "potential_split_points": [
+      {
+        "after": "layer1",
+        "before": "layer2",
+        "type": "between_residual_stages"
+      },
+      {
+        "after": "layer2",
+        "before": "layer3",
+        "type": "between_residual_stages"
+      },
+      {
+        "after": "layer3",
+        "before": "layer4",
+        "type": "between_residual_stages"
+      }
+    ],
+    "architecture_pattern": "resnet_style"
+  },
+  "resnet50": {
+    "model_name": "resnet50",
+    "total_parameters": 25557032,
+    "top_level_modules": {
+      "conv1": {
+        "type": "Conv2d",
+        "parameters": 9408,
+        "is_sequential": false,
+        "num_children": 0,
+        "children_types": []
+      },
+      "bn1": {
+        "type": "BatchNorm2d",
+        "parameters": 128,
+        "is_sequential": false,
+        "num_children": 0,
+        "children_types": []
+      },
+      "relu": {
+        "type": "ReLU",
+        "parameters": 0,
+        "is_sequential": false,
+        "num_children": 0,
+        "children_types": []
+      },
+      "maxpool": {
+        "type": "MaxPool2d",
+        "parameters": 0,
+        "is_sequential": false,
+        "num_children": 0,
+        "children_types": []
+      },
+      "layer1": {
+        "type": "Sequential",
+        "parameters": 215808,
+        "is_sequential": true,
+        "num_children": 3,
+        "children_types": [
+          "Bottleneck"
+        ],
+        "num_blocks": 3,
+        "block_types": [
+          "Bottleneck",
+          "Bottleneck",
+          "Bottleneck"
+        ]
+      },
+      "layer2": {
+        "type": "Sequential",
+        "parameters": 1219584,
+        "is_sequential": true,
+        "num_children": 4,
+        "children_types": [
+          "Bottleneck"
+        ],
+        "num_blocks": 4,
+        "block_types": [
+          "Bottleneck",
+          "Bottleneck",
+          "Bottleneck",
+          "Bottleneck"
+        ]
+      },
+      "layer3": {
+        "type": "Sequential",
+        "parameters": 7098368,
+        "is_sequential": true,
+        "num_children": 6,
+        "children_types": [
+          "Bottleneck"
+        ],
+        "num_blocks": 6,
+        "block_types": [
+          "Bottleneck",
+          "Bottleneck",
+          "Bottleneck",
+          "Bottleneck",
+          "Bottleneck",
+          "Bottleneck"
+        ]
+      },
+      "layer4": {
+        "type": "Sequential",
+        "parameters": 14964736,
+        "is_sequential": true,
+        "num_children": 3,
+        "children_types": [
+          "Bottleneck"
+        ],
+        "num_blocks": 3,
+        "block_types": [
+          "Bottleneck",
+          "Bottleneck",
+          "Bottleneck"
+        ]
+      },
+      "avgpool": {
+        "type": "AdaptiveAvgPool2d",
+        "parameters": 0,
+        "is_sequential": false,
+        "num_children": 0,
+        "children_types": []
+      },
+      "fc": {
+        "type": "Linear",
+        "parameters": 2049000,
+        "is_sequential": false,
+        "num_children": 0,
+        "children_types": []
+      }
+    },
+    "has_sequential_structure": false,
+    "potential_split_points": [
+      {
+        "after": "layer1",
+        "before": "layer2",
+        "type": "between_residual_stages"
+      },
+      {
+        "after": "layer2",
+        "before": "layer3",
+        "type": "between_residual_stages"
+      },
+      {
+        "after": "layer3",
+        "before": "layer4",
+        "type": "between_residual_stages"
+      }
+    ],
+    "architecture_pattern": "resnet_style"
+  },
+  "vgg16": {
+    "model_name": "vgg16",
+    "total_parameters": 138357544,
+    "top_level_modules": {
+      "features": {
+        "type": "Sequential",
+        "parameters": 14714688,
+        "is_sequential": true,
+        "num_children": 31,
+        "children_types": [
+          "Conv2d",
+          "ReLU",
+          "MaxPool2d"
+        ],
+        "num_blocks": 31,
+        "block_types": [
+          "Conv2d",
+          "ReLU",
+          "Conv2d",
+          "ReLU",
+          "MaxPool2d",
+          "Conv2d",
+          "ReLU",
+          "Conv2d",
+          "ReLU",
+          "MaxPool2d",
+          "Conv2d",
+          "ReLU",
+          "Conv2d",
+          "ReLU",
+          "Conv2d",
+          "ReLU",
+          "MaxPool2d",
+          "Conv2d",
+          "ReLU",
+          "Conv2d",
+          "ReLU",
+          "Conv2d",
+          "ReLU",
+          "MaxPool2d",
+          "Conv2d",
+          "ReLU",
+          "Conv2d",
+          "ReLU",
+          "Conv2d",
+          "ReLU",
+          "MaxPool2d"
+        ]
+      },
+      "avgpool": {
+        "type": "AdaptiveAvgPool2d",
+        "parameters": 0,
+        "is_sequential": false,
+        "num_children": 0,
+        "children_types": []
+      },
+      "classifier": {
+        "type": "Sequential",
+        "parameters": 123642856,
+        "is_sequential": true,
+        "num_children": 7,
+        "children_types": [
+          "Linear",
+          "ReLU",
+          "Dropout"
+        ],
+        "num_blocks": 7,
+        "block_types": [
+          "Linear",
+          "ReLU",
+          "Dropout",
+          "Linear",
+          "ReLU",
+          "Dropout",
+          "Linear"
+        ]
+      }
+    },
+    "has_sequential_structure": false,
+    "potential_split_points": [
+      {
+        "after_index": 4,
+        "after_module": "MaxPool2d",
+        "in_sequential": "features",
+        "type": "after_pooling"
+      },
+      {
+        "after_index": 9,
+        "after_module": "MaxPool2d",
+        "in_sequential": "features",
+        "type": "after_pooling"
+      },
+      {
+        "after_index": 16,
+        "after_module": "MaxPool2d",
+        "in_sequential": "features",
+        "type": "after_pooling"
+      },
+      {
+        "after_index": 23,
+        "after_module": "MaxPool2d",
+        "in_sequential": "features",
+        "type": "after_pooling"
+      },
+      {
+        "after": "features",
+        "before": "classifier",
+        "type": "features_to_classifier"
+      }
+    ],
+    "architecture_pattern": "vgg_style"
+  },
+  "vgg19": {
+    "model_name": "vgg19",
+    "total_parameters": 143667240,
+    "top_level_modules": {
+      "features": {
+        "type": "Sequential",
+        "parameters": 20024384,
+        "is_sequential": true,
+        "num_children": 37,
+        "children_types": [
+          "Conv2d",
+          "ReLU",
+          "MaxPool2d"
+        ],
+        "num_blocks": 37,
+        "block_types": [
+          "Conv2d",
+          "ReLU",
+          "Conv2d",
+          "ReLU",
+          "MaxPool2d",
+          "Conv2d",
+          "ReLU",
+          "Conv2d",
+          "ReLU",
+          "MaxPool2d",
+          "Conv2d",
+          "ReLU",
+          "Conv2d",
+          "ReLU",
+          "Conv2d",
+          "ReLU",
+          "Conv2d",
+          "ReLU",
+          "MaxPool2d",
+          "Conv2d",
+          "ReLU",
+          "Conv2d",
+          "ReLU",
+          "Conv2d",
+          "ReLU",
+          "Conv2d",
+          "ReLU",
+          "MaxPool2d",
+          "Conv2d",
+          "ReLU",
+          "Conv2d",
+          "ReLU",
+          "Conv2d",
+          "ReLU",
+          "Conv2d",
+          "ReLU",
+          "MaxPool2d"
+        ]
+      },
+      "avgpool": {
+        "type": "AdaptiveAvgPool2d",
+        "parameters": 0,
+        "is_sequential": false,
+        "num_children": 0,
+        "children_types": []
+      },
+      "classifier": {
+        "type": "Sequential",
+        "parameters": 123642856,
+        "is_sequential": true,
+        "num_children": 7,
+        "children_types": [
+          "Linear",
+          "ReLU",
+          "Dropout"
+        ],
+        "num_blocks": 7,
+        "block_types": [
+          "Linear",
+          "ReLU",
+          "Dropout",
+          "Linear",
+          "ReLU",
+          "Dropout",
+          "Linear"
+        ]
+      }
+    },
+    "has_sequential_structure": false,
+    "potential_split_points": [
+      {
+        "after_index": 4,
+        "after_module": "MaxPool2d",
+        "in_sequential": "features",
+        "type": "after_pooling"
+      },
+      {
+        "after_index": 9,
+        "after_module": "MaxPool2d",
+        "in_sequential": "features",
+        "type": "after_pooling"
+      },
+      {
+        "after_index": 18,
+        "after_module": "MaxPool2d",
+        "in_sequential": "features",
+        "type": "after_pooling"
+      },
+      {
+        "after_index": 27,
+        "after_module": "MaxPool2d",
+        "in_sequential": "features",
+        "type": "after_pooling"
+      },
+      {
+        "after": "features",
+        "before": "classifier",
+        "type": "features_to_classifier"
+      }
+    ],
+    "architecture_pattern": "vgg_style"
+  },
+  "alexnet": {
+    "model_name": "alexnet",
+    "total_parameters": 61100840,
+    "top_level_modules": {
+      "features": {
+        "type": "Sequential",
+        "parameters": 2469696,
+        "is_sequential": true,
+        "num_children": 13,
+        "children_types": [
+          "Conv2d",
+          "ReLU",
+          "MaxPool2d"
+        ],
+        "num_blocks": 13,
+        "block_types": [
+          "Conv2d",
+          "ReLU",
+          "MaxPool2d",
+          "Conv2d",
+          "ReLU",
+          "MaxPool2d",
+          "Conv2d",
+          "ReLU",
+          "Conv2d",
+          "ReLU",
+          "Conv2d",
+          "ReLU",
+          "MaxPool2d"
+        ]
+      },
+      "avgpool": {
+        "type": "AdaptiveAvgPool2d",
+        "parameters": 0,
+        "is_sequential": false,
+        "num_children": 0,
+        "children_types": []
+      },
+      "classifier": {
+        "type": "Sequential",
+        "parameters": 58631144,
+        "is_sequential": true,
+        "num_children": 7,
+        "children_types": [
+          "Dropout",
+          "Linear",
+          "ReLU"
+        ],
+        "num_blocks": 7,
+        "block_types": [
+          "Dropout",
+          "Linear",
+          "ReLU",
+          "Dropout",
+          "Linear",
+          "ReLU",
+          "Linear"
+        ]
+      }
+    },
+    "has_sequential_structure": false,
+    "potential_split_points": [
+      {
+        "after_index": 2,
+        "after_module": "MaxPool2d",
+        "in_sequential": "features",
+        "type": "after_pooling"
+      },
+      {
+        "after_index": 5,
+        "after_module": "MaxPool2d",
+        "in_sequential": "features",
+        "type": "after_pooling"
+      },
+      {
+        "after": "features",
+        "before": "classifier",
+        "type": "features_to_classifier"
+      }
+    ],
+    "architecture_pattern": "alexnet_style"
+  },
+  "mobilenet_v2": {
+    "model_name": "mobilenet_v2",
+    "total_parameters": 3504872,
+    "top_level_modules": {
+      "features": {
+        "type": "Sequential",
+        "parameters": 2223872,
+        "is_sequential": true,
+        "num_children": 19,
+        "children_types": [
+          "Conv2dNormActivation",
+          "InvertedResidual"
+        ],
+        "num_blocks": 19,
+        "block_types": [
+          "Conv2dNormActivation",
+          "InvertedResidual",
+          "InvertedResidual",
+          "InvertedResidual",
+          "InvertedResidual",
+          "InvertedResidual",
+          "InvertedResidual",
+          "InvertedResidual",
+          "InvertedResidual",
+          "InvertedResidual",
+          "InvertedResidual",
+          "InvertedResidual",
+          "InvertedResidual",
+          "InvertedResidual",
+          "InvertedResidual",
+          "InvertedResidual",
+          "InvertedResidual",
+          "InvertedResidual",
+          "Conv2dNormActivation"
+        ]
+      },
+      "classifier": {
+        "type": "Sequential",
+        "parameters": 1281000,
+        "is_sequential": true,
+        "num_children": 2,
+        "children_types": [
+          "Dropout",
+          "Linear"
+        ],
+        "num_blocks": 2,
+        "block_types": [
+          "Dropout",
+          "Linear"
+        ]
+      }
+    },
+    "has_sequential_structure": false,
+    "potential_split_points": [
+      {
+        "after_index": 4,
+        "in_sequential": "features",
+        "type": "between_blocks"
+      },
+      {
+        "after_index": 8,
+        "in_sequential": "features",
+        "type": "between_blocks"
+      },
+      {
+        "after_index": 12,
+        "in_sequential": "features",
+        "type": "between_blocks"
+      },
+      {
+        "after_index": 16,
+        "in_sequential": "features",
+        "type": "between_blocks"
+      }
+    ],
+    "architecture_pattern": "mobilenet_style"
+  },
+  "squeezenet1_0": {
+    "model_name": "squeezenet1_0",
+    "total_parameters": 1248424,
+    "top_level_modules": {
+      "features": {
+        "type": "Sequential",
+        "parameters": 735424,
+        "is_sequential": true,
+        "num_children": 13,
+        "children_types": [
+          "Conv2d",
+          "ReLU",
+          "MaxPool2d",
+          "Fire"
+        ],
+        "num_blocks": 13,
+        "block_types": [
+          "Conv2d",
+          "ReLU",
+          "MaxPool2d",
+          "Fire",
+          "Fire",
+          "Fire",
+          "MaxPool2d",
+          "Fire",
+          "Fire",
+          "Fire",
+          "Fire",
+          "MaxPool2d",
+          "Fire"
+        ]
+      },
+      "classifier": {
+        "type": "Sequential",
+        "parameters": 513000,
+        "is_sequential": true,
+        "num_children": 4,
+        "children_types": [
+          "Dropout",
+          "Conv2d",
+          "ReLU",
+          "AdaptiveAvgPool2d"
+        ],
+        "num_blocks": 4,
+        "block_types": [
+          "Dropout",
+          "Conv2d",
+          "ReLU",
+          "AdaptiveAvgPool2d"
+        ]
+      }
+    },
+    "has_sequential_structure": false,
+    "potential_split_points": [],
+    "architecture_pattern": "unknown"
+  },
+  "densenet121": {
+    "model_name": "densenet121",
+    "total_parameters": 7978856,
+    "top_level_modules": {
+      "features": {
+        "type": "Sequential",
+        "parameters": 6953856,
+        "is_sequential": true,
+        "num_children": 12,
+        "children_types": [
+          "Conv2d",
+          "BatchNorm2d",
+          "ReLU",
+          "MaxPool2d",
+          "_DenseBlock",
+          "_Transition"
+        ],
+        "num_blocks": 12,
+        "block_types": [
+          "Conv2d",
+          "BatchNorm2d",
+          "ReLU",
+          "MaxPool2d",
+          "_DenseBlock",
+          "_Transition",
+          "_DenseBlock",
+          "_Transition",
+          "_DenseBlock",
+          "_Transition",
+          "_DenseBlock",
+          "BatchNorm2d"
+        ]
+      },
+      "classifier": {
+        "type": "Linear",
+        "parameters": 1025000,
+        "is_sequential": false,
+        "num_children": 0,
+        "children_types": []
+      }
+    },
+    "has_sequential_structure": false,
+    "potential_split_points": [
+      {
+        "after": "transition1",
+        "in_features": true,
+        "type": "after_transition"
+      },
+      {
+        "after": "transition2",
+        "in_features": true,
+        "type": "after_transition"
+      },
+      {
+        "after": "transition3",
+        "in_features": true,
+        "type": "after_transition"
+      }
+    ],
+    "architecture_pattern": "densenet_style"
+  },
+  "inception_v3": {
+    "model_name": "inception_v3",
+    "total_parameters": 27161264,
+    "top_level_modules": {
+      "Conv2d_1a_3x3": {
+        "type": "BasicConv2d",
+        "parameters": 928,
+        "is_sequential": false,
+        "num_children": 2,
+        "children_types": [
+          "Conv2d",
+          "BatchNorm2d"
+        ]
+      },
+      "Conv2d_2a_3x3": {
+        "type": "BasicConv2d",
+        "parameters": 9280,
+        "is_sequential": false,
+        "num_children": 2,
+        "children_types": [
+          "Conv2d",
+          "BatchNorm2d"
+        ]
+      },
+      "Conv2d_2b_3x3": {
+        "type": "BasicConv2d",
+        "parameters": 18560,
+        "is_sequential": false,
+        "num_children": 2,
+        "children_types": [
+          "Conv2d",
+          "BatchNorm2d"
+        ]
+      },
+      "maxpool1": {
+        "type": "MaxPool2d",
+        "parameters": 0,
+        "is_sequential": false,
+        "num_children": 0,
+        "children_types": []
+      },
+      "Conv2d_3b_1x1": {
+        "type": "BasicConv2d",
+        "parameters": 5280,
+        "is_sequential": false,
+        "num_children": 2,
+        "children_types": [
+          "Conv2d",
+          "BatchNorm2d"
+        ]
+      },
+      "Conv2d_4a_3x3": {
+        "type": "BasicConv2d",
+        "parameters": 138624,
+        "is_sequential": false,
+        "num_children": 2,
+        "children_types": [
+          "Conv2d",
+          "BatchNorm2d"
+        ]
+      },
+      "maxpool2": {
+        "type": "MaxPool2d",
+        "parameters": 0,
+        "is_sequential": false,
+        "num_children": 0,
+        "children_types": []
+      },
+      "Mixed_5b": {
+        "type": "InceptionA",
+        "parameters": 255904,
+        "is_sequential": false,
+        "num_children": 7,
+        "children_types": [
+          "BasicConv2d"
+        ]
+      },
+      "Mixed_5c": {
+        "type": "InceptionA",
+        "parameters": 277472,
+        "is_sequential": false,
+        "num_children": 7,
+        "children_types": [
+          "BasicConv2d"
+        ]
+      },
+      "Mixed_5d": {
+        "type": "InceptionA",
+        "parameters": 285152,
+        "is_sequential": false,
+        "num_children": 7,
+        "children_types": [
+          "BasicConv2d"
+        ]
+      },
+      "Mixed_6a": {
+        "type": "InceptionB",
+        "parameters": 1153280,
+        "is_sequential": false,
+        "num_children": 4,
+        "children_types": [
+          "BasicConv2d"
+        ]
+      },
+      "Mixed_6b": {
+        "type": "InceptionC",
+        "parameters": 1297408,
+        "is_sequential": false,
+        "num_children": 10,
+        "children_types": [
+          "BasicConv2d"
+        ]
+      },
+      "Mixed_6c": {
+        "type": "InceptionC",
+        "parameters": 1691008,
+        "is_sequential": false,
+        "num_children": 10,
+        "children_types": [
+          "BasicConv2d"
+        ]
+      },
+      "Mixed_6d": {
+        "type": "InceptionC",
+        "parameters": 1691008,
+        "is_sequential": false,
+        "num_children": 10,
+        "children_types": [
+          "BasicConv2d"
+        ]
+      },
+      "Mixed_6e": {
+        "type": "InceptionC",
+        "parameters": 2141952,
+        "is_sequential": false,
+        "num_children": 10,
+        "children_types": [
+          "BasicConv2d"
+        ]
+      },
+      "AuxLogits": {
+        "type": "InceptionAux",
+        "parameters": 3326696,
+        "is_sequential": false,
+        "num_children": 3,
+        "children_types": [
+          "BasicConv2d",
+          "Linear"
+        ]
+      },
+      "Mixed_7a": {
+        "type": "InceptionD",
+        "parameters": 1698304,
+        "is_sequential": false,
+        "num_children": 6,
+        "children_types": [
+          "BasicConv2d"
+        ]
+      },
+      "Mixed_7b": {
+        "type": "InceptionE",
+        "parameters": 5044608,
+        "is_sequential": false,
+        "num_children": 9,
+        "children_types": [
+          "BasicConv2d"
+        ]
+      },
+      "Mixed_7c": {
+        "type": "InceptionE",
+        "parameters": 6076800,
+        "is_sequential": false,
+        "num_children": 9,
+        "children_types": [
+          "BasicConv2d"
+        ]
+      },
+      "avgpool": {
+        "type": "AdaptiveAvgPool2d",
+        "parameters": 0,
+        "is_sequential": false,
+        "num_children": 0,
+        "children_types": []
+      },
+      "dropout": {
+        "type": "Dropout",
+        "parameters": 0,
+        "is_sequential": false,
+        "num_children": 0,
+        "children_types": []
+      },
+      "fc": {
+        "type": "Linear",
+        "parameters": 2049000,
+        "is_sequential": false,
+        "num_children": 0,
+        "children_types": []
+      }
+    },
+    "has_sequential_structure": false,
+    "potential_split_points": [],
+    "architecture_pattern": "inception_style"
+  },
+  "googlenet": {
+    "model_name": "googlenet",
+    "total_parameters": 13004888,
+    "top_level_modules": {
+      "conv1": {
+        "type": "BasicConv2d",
+        "parameters": 9536,
+        "is_sequential": false,
+        "num_children": 2,
+        "children_types": [
+          "Conv2d",
+          "BatchNorm2d"
+        ]
+      },
+      "maxpool1": {
+        "type": "MaxPool2d",
+        "parameters": 0,
+        "is_sequential": false,
+        "num_children": 0,
+        "children_types": []
+      },
+      "conv2": {
+        "type": "BasicConv2d",
+        "parameters": 4224,
+        "is_sequential": false,
+        "num_children": 2,
+        "children_types": [
+          "Conv2d",
+          "BatchNorm2d"
+        ]
+      },
+      "conv3": {
+        "type": "BasicConv2d",
+        "parameters": 110976,
+        "is_sequential": false,
+        "num_children": 2,
+        "children_types": [
+          "Conv2d",
+          "BatchNorm2d"
+        ]
+      },
+      "maxpool2": {
+        "type": "MaxPool2d",
+        "parameters": 0,
+        "is_sequential": false,
+        "num_children": 0,
+        "children_types": []
+      },
+      "inception3a": {
+        "type": "Inception",
+        "parameters": 155872,
+        "is_sequential": false,
+        "num_children": 4,
+        "children_types": [
+          "BasicConv2d",
+          "Sequential"
+        ]
+      },
+      "inception3b": {
+        "type": "Inception",
+        "parameters": 340224,
+        "is_sequential": false,
+        "num_children": 4,
+        "children_types": [
+          "BasicConv2d",
+          "Sequential"
+        ]
+      },
+      "maxpool3": {
+        "type": "MaxPool2d",
+        "parameters": 0,
+        "is_sequential": false,
+        "num_children": 0,
+        "children_types": []
+      },
+      "inception4a": {
+        "type": "Inception",
+        "parameters": 364512,
+        "is_sequential": false,
+        "num_children": 4,
+        "children_types": [
+          "BasicConv2d",
+          "Sequential"
+        ]
+      },
+      "inception4b": {
+        "type": "Inception",
+        "parameters": 425232,
+        "is_sequential": false,
+        "num_children": 4,
+        "children_types": [
+          "BasicConv2d",
+          "Sequential"
+        ]
+      },
+      "inception4c": {
+        "type": "Inception",
+        "parameters": 486192,
+        "is_sequential": false,
+        "num_children": 4,
+        "children_types": [
+          "BasicConv2d",
+          "Sequential"
+        ]
+      },
+      "inception4d": {
+        "type": "Inception",
+        "parameters": 573312,
+        "is_sequential": false,
+        "num_children": 4,
+        "children_types": [
+          "BasicConv2d",
+          "Sequential"
+        ]
+      },
+      "inception4e": {
+        "type": "Inception",
+        "parameters": 803840,
+        "is_sequential": false,
+        "num_children": 4,
+        "children_types": [
+          "BasicConv2d",
+          "Sequential"
+        ]
+      },
+      "maxpool4": {
+        "type": "MaxPool2d",
+        "parameters": 0,
+        "is_sequential": false,
+        "num_children": 0,
+        "children_types": []
+      },
+      "inception5a": {
+        "type": "Inception",
+        "parameters": 978944,
+        "is_sequential": false,
+        "num_children": 4,
+        "children_types": [
+          "BasicConv2d",
+          "Sequential"
+        ]
+      },
+      "inception5b": {
+        "type": "Inception",
+        "parameters": 1347040,
+        "is_sequential": false,
+        "num_children": 4,
+        "children_types": [
+          "BasicConv2d",
+          "Sequential"
+        ]
+      },
+      "aux1": {
+        "type": "InceptionAux",
+        "parameters": 3188968,
+        "is_sequential": false,
+        "num_children": 4,
+        "children_types": [
+          "BasicConv2d",
+          "Linear",
+          "Dropout"
+        ]
+      },
+      "aux2": {
+        "type": "InceptionAux",
+        "parameters": 3191016,
+        "is_sequential": false,
+        "num_children": 4,
+        "children_types": [
+          "BasicConv2d",
+          "Linear",
+          "Dropout"
+        ]
+      },
+      "avgpool": {
+        "type": "AdaptiveAvgPool2d",
+        "parameters": 0,
+        "is_sequential": false,
+        "num_children": 0,
+        "children_types": []
+      },
+      "dropout": {
+        "type": "Dropout",
+        "parameters": 0,
+        "is_sequential": false,
+        "num_children": 0,
+        "children_types": []
+      },
+      "fc": {
+        "type": "Linear",
+        "parameters": 1025000,
+        "is_sequential": false,
+        "num_children": 0,
+        "children_types": []
+      }
+    },
+    "has_sequential_structure": false,
+    "potential_split_points": [],
+    "architecture_pattern": "inception_style"
+  },
+  "efficientnet_b0": {
+    "model_name": "efficientnet_b0",
+    "total_parameters": 5288548,
+    "top_level_modules": {
+      "features": {
+        "type": "Sequential",
+        "parameters": 4007548,
+        "is_sequential": true,
+        "num_children": 9,
+        "children_types": [
+          "Conv2dNormActivation",
+          "Sequential"
+        ],
+        "num_blocks": 9,
+        "block_types": [
+          "Conv2dNormActivation",
+          "Sequential",
+          "Sequential",
+          "Sequential",
+          "Sequential",
+          "Sequential",
+          "Sequential",
+          "Sequential",
+          "Conv2dNormActivation"
+        ]
+      },
+      "avgpool": {
+        "type": "AdaptiveAvgPool2d",
+        "parameters": 0,
+        "is_sequential": false,
+        "num_children": 0,
+        "children_types": []
+      },
+      "classifier": {
+        "type": "Sequential",
+        "parameters": 1281000,
+        "is_sequential": true,
+        "num_children": 2,
+        "children_types": [
+          "Dropout",
+          "Linear"
+        ],
+        "num_blocks": 2,
+        "block_types": [
+          "Dropout",
+          "Linear"
+        ]
+      }
+    },
+    "has_sequential_structure": false,
+    "potential_split_points": [
+      {
+        "after_index": 3,
+        "in_sequential": "features",
+        "type": "between_blocks"
+      },
+      {
+        "after_index": 6,
+        "in_sequential": "features",
+        "type": "between_blocks"
+      }
+    ],
+    "architecture_pattern": "efficientnet_style"
+  }
+}
