@@ -37,7 +37,7 @@ ParetoPipe is an open-source framework designed to systematically benchmark and 
    B. Raspberry Pi\
    python3 -m venv ~/venvs/pareto\
    source ~/venvs/pareto/bin/activate\
-   
+
    pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu\
    pip install -r requirements.txt\
    pip install numpy pillow psutil pandas\
@@ -68,3 +68,67 @@ ParetoPipe is an open-source framework designed to systematically benchmark and 
 9) One-shot example (MobileNetV2 + 200 ms delay) for test
       Simply navigate and follow the above instruction as well as run ./pareto.sh remember that to have the file mobilenet_pi1.py and mobilenet_pi2.py, save the results on json files.
 10) Finally, just wait to see the output results.
+
+---
+
+### Instructions to Run (PyTorch RPC Implementation)
+
+1. Clone repository on all machines
+
+2. Set your `.env` files for each machine (example below)
+
+   ```
+   # Distributed inference configuration
+   # Copy this file to .env and modify the values for your setup
+
+   # Master node IP address (where rank 0 runs)
+   MASTER_ADDR=192.168.1.1
+
+   # Master node port for RPC communication
+   MASTER_PORT=123456
+
+   # Network interface name (use `ip a` to find yours)
+   GLOO_SOCKET_IFNAME=eth0
+
+   # TensorPipe socket interface (usually same as GLOO)
+   TP_SOCKET_IFNAME=eth0
+
+   # Optional: Dataset path
+   # CIFAR10_PATH=/path/to/cifar10
+   ```
+
+3. Download requirements
+   `pip install -r RPC_PyTorch/requirements.txt`
+
+4. Running (2 Options)
+
+- **`distributed_runner.py`** - Main distributed inference runner with the following flags:
+
+  - `--rank` (int, default=0): Rank of current process (0 for master, 1+ for workers)
+  - `--world-size` (int, default=3): Total number of processes (1 master + N workers)
+  - `--model` (str, default="mobilenetv2"): Model architecture to use (mobilenetv2, resnet18, resnet50, vgg16, alexnet, inceptionv3)
+  - `--batch-size` (int, default=8): Batch size for inference
+  - `--num-classes` (int, default=10): Number of output classes
+  - `--dataset` (str, default="cifar10"): Dataset to use (cifar10 or dummy)
+  - `--num-test-samples` (int, default=64): Number of images to test
+  - `--num-partitions` (int, default=2): Number of model partitions to split across devices
+  - `--metrics-dir` (str, default="./enhanced_metrics"): Directory for saving performance metrics
+  - `--models-dir` (str, default="./models"): Directory containing model weight files
+  - `--use-intelligent-splitting` (flag, default=True): Use profiling-based intelligent splitting
+  - `--use-pipelining` (flag, default=False): Enable pipelined execution for improved throughput
+  - `--num-threads` (int, default=4): Number of RPC threads for communication
+  - `--disable-intelligent-splitting` (flag): Disable intelligent splitting, use traditional method
+  - `--split-block` (int): Specific block number to split at (for MobileNetV2)
+  - `--use-local-loading` (flag, default=True): Load model weights locally on workers from pre-split files
+  - `--shards-dir` (str, default="~/datasets/model_shards"): Directory containing pre-split model shards
+  - `--enable-prefetch` (flag, default=False): Enable data prefetching for improved throughput
+  - `--prefetch-batches` (int, default=2): Number of batches to prefetch
+
+- **`automated_split_tester.py`** - Automated testing tool for evaluating different split points:
+  - `--splits` (list of ints): Specific split blocks to test (default: all 0-18 for MobileNetV2)
+  - `--runs` (int, default=3): Number of runs per split for averaging results
+  - `--wait-time` (int, default=60): Seconds to wait for workers to be ready
+  - `--cleanup` (flag): Clean up individual output files after consolidation
+  - `--no-optimizations` (flag): Disable optimization features (local loading, caching, prefetching)
+  - `--model` (str, default="mobilenetv2"): Model to test (mobilenetv2, resnet18, resnet50, vgg16, alexnet, inceptionv3)
+1
