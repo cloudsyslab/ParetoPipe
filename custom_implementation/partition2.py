@@ -1,11 +1,10 @@
-#partition2
+# Partition 2
 import torch
 import socket
 import pickle
 import time
 import os
 import json
-import psutil
 import numpy as np
 import argparse
 import torch.nn as nn
@@ -13,87 +12,15 @@ from torchvision import models
 
 # --- Configuration ---
 PORT = 5555
-MODEL_NAME = "MobileNetV2"
-CIFAR10_WEIGHTS_PATH = "./models/mobilenetv2_cifar10.pth"
 BATCH_SIZE = 8
-# REMOVED: Hardcoded network delay constant. This will now be a command-line argument.
 
 # --- Helper Classes & Functions ---
-
 class ModelPart(nn.Module):
     def __init__(self, part):
         super().__init__()
         self.part = part
     def forward(self, x):
         return self.part(x)
-    
-#----MobileNetV2---
-def load_full_mobilenetv2():
-    """Loads the base MobileNetV2 model and modifies it for CIFAR-10."""
-    model = models.mobilenet_v2(weights=None)
-    model.classifier[1] = nn.Linear(1280, 10)
-    if os.path.exists(CIFAR10_WEIGHTS_PATH):
-        try:
-            # THIS IS THE CORRECTED LINE: Added weights_only=True for security
-            state_dict = torch.load(CIFAR10_WEIGHTS_PATH, map_location="cpu", weights_only=True)
-            model.load_state_dict(state_dict)
-            print(f"[{MODEL_NAME}] Loaded CIFAR-10 trained weights.")
-        except Exception as e:
-            print(f"[{MODEL_NAME}] Failed to load weights: {e}. Using random initialization.")
-    else:
-        print(f"[{MODEL_NAME}] No weights found. Using random initialization.")
-    return model
-def recvall(sock, length):
-    """Helper function to receive a specific number of bytes from a socket."""
-    data = b''
-    while len(data) < length:
-        more = sock.recv(length - len(data))
-        if not more:
-            raise EOFError("Socket closed early.")
-        data += more
-    return data
-# --- Main Client Logic ---
-
-def run_client(server_host, split_index, output_dir, network_delay_ms):
-    """
-    Runs the client logic. Calculates and saves all performance metrics.
-    """
-    print(f"[Client] Preparing to run for split index: {split_index} with {network_delay_ms}ms simulated delay.")
-
-    # 1. Load and create Part 2 of the model
-    full_model = load_full_mobilenetv2()
-    feature_blocks = list(full_model.features.children())
-    
-    if not (1 <= split_index < len(feature_blocks)):
-        print(f"Error: Split index must be between 1 and {len(feature_blocks) - 1}")
-        return
-        
-    part2_model = ModelPart(nn.Sequential(
-        *feature_blocks[split_index:],
-        nn.AdaptiveAvgPool2d((1, 1)),
-        nn.Flatten(),
-        full_model.classifier
-    )).eval()
-#---END MobileNet---
-
-#---AlexNet---
-def load_full_alexnet():
-    """Loads the base AlexNet model and modifies it for CIFAR-10."""
-    model = models.alexnet(weights=None)
-    # The last layer of AlexNet's classifier is at index 6
-    num_features = model.classifier[6].in_features
-    model.classifier[6] = nn.Linear(num_features, 10) # Modify for 10 classes
-    
-    if os.path.exists(ALEXNET_WEIGHTS_PATH):
-        try:
-            state_dict = torch.load(ALEXNET_WEIGHTS_PATH, map_location="cpu", weights_only=True)
-            model.load_state_dict(state_dict)
-            print(f"[{MODEL_NAME}] Loaded CIFAR-10 trained weights.")
-        except Exception as e:
-            print(f"[{MODEL_NAME}] Failed to load weights: {e}. Using random initialization.")
-    else:
-        print(f"[{MODEL_NAME}] No weights found. Using random initialization.")
-    return model
 
 def recvall(sock, length):
     """Helper function to receive a specific number of bytes from a socket."""
@@ -101,240 +28,128 @@ def recvall(sock, length):
     while len(data) < length:
         more = sock.recv(length - len(data))
         if not more:
-            raise EOFError("Socket closed early.")
+            raise EOFError("Socket closed early while trying to receive data.")
         data += more
     return data
+
+def get_part2_model(model_name, split_index, weights_path):
+    """
+    Loads the correct full model and constructs the second part of the model
+    based on the split index.
+    """
+    # Define a generic weights path, but allow model-specific overrides if needed
+    CIFAR10_WEIGHTS_PATH = os.path.join("models", f"{model_name.lower()}_cifar10.pth")
+    if not os.path.exists(CIFAR10_WEIGHTS_PATH):
+        print(f"[{model_name}] No weights found at {CIFAR10_WEIGHTS_PATH}. Using random initialization.")
+        weights_path = None
+    else:
+        weights_path = CIFAR10_WEIGHTS_PATH
+        print(f"[{model_name}] Found weights at {weights_path}.")
+        
+    part2_model = None
+
+    # --- MobileNetV2 ---
+    if model_name == "MobileNetV2":
+        full_model = models.mobilenet_v2(weights=None)
+        full_model.classifier[1] = nn.Linear(1280, 10)
+        if weights_path: full_model.load_state_dict(torch.load(weights_path, map_location="cpu"))
+        
+        feature_blocks = list(full_model.features.children())
+        part2_model = ModelPart(nn.Sequential(
+            *feature_blocks[split_index:],
+            nn.AdaptiveAvgPool2d((1, 1)),
+            nn.Flatten(),
+            full_model.classifier
+        )).eval()
+
+    # --- AlexNet ---
+    elif model_name == "AlexNet":
+        full_model = models.alexnet(weights=None)
+        full_model.classifier[6] = nn.Linear(full_model.classifier[6].in_features, 10)
+        if weights_path: full_model.load_state_dict(torch.load(weights_path, map_location="cpu"))
+        
+        feature_blocks = list(full_model.features.children())
+        part2_model = ModelPart(nn.Sequential(
+            *feature_blocks[split_index:],
+            full_model.avgpool,
+            nn.Flatten(start_dim=1),
+            full_model.classifier
+        )).eval()
+        
+    # --- ResNet18 ---
+    elif model_name == "ResNet18":
+        full_model = models.resnet18(weights=None)
+        full_model.fc = nn.Linear(full_model.fc.in_features, 10)
+        if weights_path: full_model.load_state_dict(torch.load(weights_path, map_location="cpu"))
+        
+        all_blocks = [*full_model.layer1, *full_model.layer2, *full_model.layer3, *full_model.layer4]
+        part2_layers = [
+            *all_blocks[split_index:],
+            full_model.avgpool,
+            nn.Flatten(),
+            full_model.fc
+        ]
+        part2_model = ModelPart(nn.Sequential(*part2_layers)).eval()
+
+    # --- ResNet50 ---
+    elif model_name == "ResNet50":
+        full_model = models.resnet50(weights=None)
+        full_model.fc = nn.Linear(full_model.fc.in_features, 10)
+        if weights_path: full_model.load_state_dict(torch.load(weights_path, map_location="cpu"))
+
+        blocks = [nn.Sequential(full_model.conv1, full_model.bn1, full_model.relu, full_model.maxpool)]
+        for layer in [full_model.layer1, full_model.layer2, full_model.layer3, full_model.layer4]:
+            blocks.extend(layer.children())
+        
+        part2_model = ModelPart(nn.Sequential(
+            *blocks[split_index:],
+            full_model.avgpool,
+            nn.Flatten(start_dim=1),
+            full_model.fc
+        )).eval()
+        
+    # --- VGG16 ---
+    elif model_name == "VGG16":
+        full_model = models.vgg16(weights=None)
+        full_model.classifier[6] = nn.Linear(full_model.classifier[6].in_features, 10)
+        if weights_path: full_model.load_state_dict(torch.load(weights_path, map_location="cpu"))
+        
+        layers = list(full_model.features.children())
+        part2_model = ModelPart(nn.Sequential(
+            *layers[split_index:],
+            full_model.avgpool,
+            nn.Flatten(),
+            *full_model.classifier
+        )).eval()
+        
+    # --- InceptionV3 ---
+    elif model_name == "InceptionV3":
+        full_model = models.inception_v3(weights=None, aux_logits=False)
+        full_model.fc = nn.Linear(full_model.fc.in_features, 10)
+        if weights_path: full_model.load_state_dict(torch.load(weights_path, map_location="cpu"))
+        
+        layers = list(full_model.children())[:-1] # Exclude fc
+        part2_model = ModelPart(nn.Sequential(
+            *layers[split_index:],
+            nn.AdaptiveAvgPool2d(output_size=(1, 1)), # Ensure correct output size
+            nn.Flatten(),
+            full_model.fc
+        )).eval()
+        
+    else:
+        raise ValueError(f"Unknown model name: {model_name}")
+
+    return part2_model
 
 # --- Main Client Logic ---
-
-def run_client(server_host, split_index, output_dir, network_delay_ms):
-    """
-    Runs the client logic for AlexNet. Calculates and saves all performance metrics.
-    """
-    print(f"[Client] Preparing to run {MODEL_NAME} for split index: {split_index} with {network_delay_ms}ms simulated delay.")
-
-    # 1. Load and create Part 2 of the model
-    full_model = load_full_alexnet() # MODIFIED
-    feature_blocks = list(full_model.features.children())
+def run_client(model_name, server_host, split_index, output_dir, network_delay_ms):
+    print(f"[Client] Preparing for '{model_name}' split at index {split_index} from host {server_host}")
     
-    if not (1 <= split_index < len(feature_blocks)):
-        print(f"Error: Split index must be between 1 and {len(feature_blocks) - 1}")
+    try:
+        part2_model = get_part2_model(model_name, split_index, None)
+    except ValueError as e:
+        print(f"[Client] Error: {e}")
         return
-        
-    # MODIFIED: Reconstruct Part 2 according to AlexNet's architecture
-    part2_model = ModelPart(nn.Sequential(
-        *feature_blocks[split_index:],
-        full_model.avgpool,
-        nn.Flatten(start_dim=1),
-        full_model.classifier
-    )).eval()
-#----END ----
-
-#---ResNet18-----
-def load_full_resnet18():
-    model = models.resnet18(weights=None)
-    model.fc = nn.Linear(model.fc.in_features, 10)
-    if os.path.exists(CIFAR10_WEIGHTS_PATH):
-        try:
-            model.load_state_dict(torch.load(CIFAR10_WEIGHTS_PATH, map_location="cpu"))
-            print(f"[{MODEL_NAME}] Loaded CIFAR-10 trained weights.")
-        except Exception as e:
-            print(f"[{MODEL_NAME}] Failed to load weights: {e}. Using random init.")
-    else:
-        print(f"[{MODEL_NAME}] No weights found. Using random init.")
-    return model
-
-def recvall(sock, length):
-    data = b''
-    while len(data) < length:
-        more = sock.recv(length - len(data))
-        if not more:
-            raise EOFError("Socket closed early.")
-        data += more
-    return data
-
-def run_client(server_host, split_index, output_dir, network_delay_ms):
-    """
-    Runs the client logic for AlexNet. Calculates and saves all performance metrics.
-    """
-    print(f"[Client] Preparing to run {MODEL_NAME} for split index: {split_index} with {network_delay_ms}ms simulated delay.")
-
-    full_model = load_full_resnet18()
-    initial_layers = [
-        full_model.conv1, full_model.bn1, full_model.relu, full_model.maxpool
-    ]
-    all_blocks = [
-        *full_model.layer1, # Unpack the 2 blocks from layer1
-        *full_model.layer2, # Unpack the 2 blocks from layer2
-        *full_model.layer3, # Unpack the 2 blocks from layer3
-        *full_model.layer4  # Unpack the 2 blocks from layer4
-    ]
-
-    # This is the validation for an index from 1 to 8
-    if not (1 <= split_index <= len(all_blocks)):
-        print(f"Invalid block split index: {split_index}")
-        return
-
-    # --- On the SERVER ---
-
-    # Part 1 includes the initial layers PLUS the first N blocks
-    part1_layers = initial_layers + all_blocks[:split_index]
-    part1_model = ModelPart(nn.Sequential(*part1_layers)).eval()
-
-
-    # --- On the CLIENT ---
-    # Part 2 includes the remaining blocks PLUS the final layers
-    part2_layers = [
-        *all_blocks[split_index:],
-        full_model.avgpool,
-        nn.Flatten(),
-        full_model.fc
-    ]
-    part2_model = ModelPart(nn.Sequential(*part2_layers)).eval()
-#----END ResNet18--
-
-#-----Resnet50----
-def load_full_resnet50():
-    model = models.resnet50(weights=None)
-    model.fc = nn.Linear(model.fc.in_features, 10)
-    if os.path.exists(RESNET50_WEIGHTS_PATH):
-        try:
-            state_dict = torch.load(RESNET50_WEIGHTS_PATH, map_location="cpu", weights_only=True)
-            model.load_state_dict(state_dict)
-            print(f"[{MODEL_NAME}] Loaded CIFAR-10 trained weights.")
-        except TypeError:
-            state_dict = torch.load(RESNET50_WEIGHTS_PATH, map_location="cpu")
-            model.load_state_dict(state_dict)
-            print(f"[{MODEL_NAME}] Loaded weights (fallback).")
-        except Exception as e:
-            print(f"[{MODEL_NAME}] Failed to load weights: {e}")
-    else:
-        print(f"[{MODEL_NAME}] No weights found. Using random initialization.")
-    return model
-
-def get_resnet50_blocks(model):
-    blocks = []
-    # Stem
-    blocks.append(nn.Sequential(model.conv1, model.bn1, model.relu, model.maxpool))
-    # Bottleneck blocks
-    for layer in [model.layer1, model.layer2, model.layer3, model.layer4]:
-        for block in layer:
-            blocks.append(block)
-    return blocks
-
-def recvall(sock, length):
-    data = b''
-    while len(data) < length:
-        more = sock.recv(length - len(data))
-        if not more:
-            raise EOFError("Socket closed early.")
-        data += more
-    return data
-
-def run_client(server_host, split_index, output_dir, network_delay_ms):
-    print(f"[Client] Starting {MODEL_NAME} split at index {split_index} with simulated {network_delay_ms}ms delay.")
-
-    full_model = load_full_resnet50()
-    blocks = get_resnet50_blocks(full_model)
-
-    # ... inside run_client ...
-    if not (1 <= split_index <= 18):
-        raise ValueError("split_index for blocks must be between 1 and 18")
-
-    # Part 2 starts after the Nth block
-    part2_model = ModelPart(nn.Sequential(
-        *blocks[split_index + 1:], # The slice is shifted by 1
-        full_model.avgpool,
-        nn.Flatten(start_dim=1),
-        full_model.fc
-    )).eval()
-#---End ResNet50--
-
-#----VGG16----
-def load_full_vgg16():
-    model = models.vgg16(weights=None)
-    model.classifier[6] = nn.Linear(model.classifier[6].in_features, 10)
-    if os.path.exists(CIFAR10_WEIGHTS_PATH):
-        try:
-            model.load_state_dict(torch.load(CIFAR10_WEIGHTS_PATH, map_location="cpu"))
-            print(f"[{MODEL_NAME}] Loaded CIFAR-10 trained weights.")
-        except Exception as e:
-            print(f"[{MODEL_NAME}] Failed to load weights: {e}. Using random init.")
-    else:
-        print(f"[{MODEL_NAME}] No weights found. Using random init.")
-    return model
-
-def recvall(sock, length):
-    data = b''
-    while len(data) < length:
-        more = sock.recv(length - len(data))
-        if not more:
-            raise EOFError("Socket closed early.")
-        data += more
-    return data
-
-def run_client(server_host, split_index, output_dir, network_delay_ms):
-    """
-    Runs the client logic for AlexNet. Calculates and saves all performance metrics.
-    """
-    print(f"[Client] Preparing to run {MODEL_NAME} for split index: {split_index} with {network_delay_ms}ms simulated delay.")
-
-    model = load_full_vgg16()
-    layers = list(model.features.children())
-    if not (1 <= split_index < len(layers)):
-        print(f"Invalid split index: {split_index}")
-        return
-
-    part2_model = ModelPart(nn.Sequential(
-        *layers[split_index:],
-        model.avgpool,
-        nn.Flatten(),
-        *model.classifier
-    )).eval()
-
-#---END VGG16---
-
-#----InceptionV3----
-def load_full_inceptionv3():
-    model = models.inception_v3(weights=None, aux_logits=False)
-    model.fc = nn.Linear(model.fc.in_features, 10)
-    if os.path.exists(CIFAR10_WEIGHTS_PATH):
-        try:
-            model.load_state_dict(torch.load(CIFAR10_WEIGHTS_PATH, map_location="cpu"))
-            print(f"[{MODEL_NAME}] Loaded CIFAR-10 trained weights.")
-        except Exception as e:
-            print(f"[{MODEL_NAME}] Failed to load weights: {e}. Using random init.")
-    else:
-        print(f"[{MODEL_NAME}] No weights found. Using random init.")
-    return model
-
-def recvall(sock, length):
-    data = b''
-    while len(data) < length:
-        more = sock.recv(length - len(data))
-        if not more:
-            raise EOFError("Socket closed early.")
-        data += more
-    return data
-
-def run_client(server_host, split_index, output_dir, network_delay_ms):
-    """
-    Runs the client logic for AlexNet. Calculates and saves all performance metrics.
-    """
-    print(f"[Client] Preparing to run {MODEL_NAME} for split index: {split_index} with {network_delay_ms}ms simulated delay.")
-
-    full_model = load_full_inceptionv3()
-    layers = list(full_model.children())[:-1]  # exclude fc
-    if not (1 <= split_index < len(layers)):
-        print(f"Invalid split index: {split_index}")
-        return
-
-    part2_model = ModelPart(nn.Sequential(
-        *layers[split_index:],
-        nn.Flatten(),
-        full_model.fc
-    )).eval()
-#---END---
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
@@ -354,6 +169,7 @@ def run_client(server_host, split_index, output_dir, network_delay_ms):
                 print("[Client] Received end-of-data signal.")
                 break
 
+            # Network reception time
             t_net_start = time.time()
             data_payload_bytes = recvall(s, data_size)
             network_time_s = time.time() - t_net_start
@@ -363,14 +179,16 @@ def run_client(server_host, split_index, output_dir, network_delay_ms):
             batch_start_time = payload['batch_start_time']
             part1_inference_time = payload['part1_inference_time_s']
 
+            # Part 2 inference
             t_infer2_start = time.time()
             with torch.no_grad():
-                model_output = part2_model(tensor)
+                _ = part2_model(tensor)
             part2_inference_time = time.time() - t_infer2_start
 
             batch_end_time = time.time()
             batch_completion_times.append(batch_end_time)
 
+            # Calculate metrics for this batch
             end_to_end_latency = batch_end_time - batch_start_time
             network_throughput_mbps = (data_size / (1024*1024)) / network_time_s if network_time_s > 0 else 0
 
@@ -385,9 +203,10 @@ def run_client(server_host, split_index, output_dir, network_delay_ms):
             print(f"[Client] Processed batch. End-to-end latency: {end_to_end_latency:.4f}s")
 
     except Exception as e:
-        print(f"[Client] Error: {e}")
+        print(f"[Client] Communication Error: {e}")
     finally:
         s.close()
+        print("[Client] Connection closed.")
 
     if all_batch_metrics:
         system_throughput_imgs_s = 0
@@ -398,7 +217,7 @@ def run_client(server_host, split_index, output_dir, network_delay_ms):
         avg_metrics = {key: np.mean([m[key] for m in all_batch_metrics]) for key in all_batch_metrics[0]}
 
         results = {
-            "model_name": MODEL_NAME,
+            "model_name": model_name,
             "split_index": split_index,
             "static_network_delay_ms": network_delay_ms,
             "system_inference_throughput_imgs_per_s": system_throughput_imgs_s,
@@ -406,17 +225,20 @@ def run_client(server_host, split_index, output_dir, network_delay_ms):
         }
 
         os.makedirs(output_dir, exist_ok=True)
-        output_path = os.path.join(output_dir, f"{MODEL_NAME}_split_{split_index}_metrics.json")
+        output_path = os.path.join(output_dir, f"{model_name}_split_{split_index}_metrics.json")
         with open(output_path, 'w') as f:
             json.dump(results, f, indent=4)
         print(f"[Client] Metrics saved to {output_path}")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Client-side (Part 2) for split inference.")
+    parser.add_argument("--model-name", type=str, required=True,
+                        choices=["MobileNetV2", "AlexNet", "ResNet18", "ResNet50", "VGG16", "InceptionV3"],
+                        help="The name of the model to use.")
     parser.add_argument("--host", type=str, required=True, help="The IP address of the server.")
-    parser.add_argument("--split-index", type=int, required=True, help="The layer index where the split occurs.")
+    parser.add_argument("--split-index", type=int, required=True, help="The layer/block index where the split occurs.")
     parser.add_argument("--output-dir", type=str, default="split_results", help="Directory to save the JSON metric files.")
-    parser.add_argument("--network-delay-ms", type=float, default=0, help="The simulated round-trip network delay in milliseconds for logging purposes.")
+    parser.add_argument("--network-delay-ms", type=float, default=0, help="Simulated network delay (for logging).")
     args = parser.parse_args()
 
-    run_client(args.host, args.split_index, args.output_dir, args.network_delay_ms)
+    run_client(args.model_name, args.host, args.split_index, args.output_dir, args.network_delay_ms)
