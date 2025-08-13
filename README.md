@@ -65,8 +65,20 @@ ParetoPipe is an open-source framework designed to systematically benchmark and 
    ->Shape mismatch → confirm identical transforms on both sides; print tensor shapes right after the split;\
    ->Port busy → kill old server/tmux or fuser -k $PORT/tcp;\
    ->InceptionV3 errors → use --input-size 299 and aux_logits=False in the model init.
-9) One-shot example (MobileNetV2 + 200 ms delay) for test
-      Simply navigate and follow the above instruction as well as run ./pareto.sh remember that to have the file mobilenet_pi1.py and mobilenet_pi2.py, save the results on json files.
+9)
+                           [ GPU Server ]
+                           |
+                           |--> Executes partition.sh
+                           |
+                           +=======================+
+                           |                       |
+                           (SSH)                   (SSH)
+                           |                       |
+                           v                       v
+                           [ Raspberry Pi 1 ] ----> [ Raspberry Pi 2 ]
+                           - Runs partition1.py     - Runs partition2.py
+                           - Executes Model Part 1  - Executes Model Part 2
+
 10) Finally, just wait to see the output results.
 
 ---
