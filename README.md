@@ -80,7 +80,22 @@ ParetoPipe is an open-source framework designed to systematically benchmark and 
                            - Runs partition1.py     - Runs partition2.py
                            - Executes Model Part 1  - Executes Model Part 2
 
-10) Finally, just wait to see the output results.
+   #Here's a breakdown of the key files in this repository
+      ->partition1.py: The core script for the first device (Raspberry Pi 1). It loads the initial layers of the model.\
+      ->partition2.py: The core script for the second device (Raspberry Pi 2). It loads the final layers of the model and receives input from the first device.\
+      ->partition.sh: The main execution script. This is run from the GPU server. It automates the process of deploying and running the partition scripts on both Raspberry Pis.\
+      ->network_delay.py: A utility script to measure the network latency between the two Raspberry Pis, a critical bottleneck in distributed systems.\
+      ->pareto_front.ipynb: A Jupyter Notebook used for post-experiment analysis. It loads the output .json files to visualize performance and plot a Pareto front for latency/resource trade-offs.\
+      ->Model Files (AlexNet.py, ResNet50.py, etc.): Implementations of various CNN architectures. These are currently a Work In Progress (WIP) and will be integrated into the partitioning framework.
+
+ #🔬 How to Run the Experiment:
+ 1. SSH into your GPU Server.
+ 2. Navigate to the project's root directory.
+ 3. Make sure both Raspberry Pis are powered on and connected to the network.
+ 4. Execute the main script:
+      ```
+      bash partition.sh
+ 5. The script will now connect to the Pis, run the experiments, and collect the data. Monitor the terminal for output. Upon completion, one or more .json files will be generated in the directory.
 
 ---
 
