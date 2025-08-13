@@ -65,7 +65,8 @@ ParetoPipe is an open-source framework designed to systematically benchmark and 
    ->Shape mismatch → confirm identical transforms on both sides; print tensor shapes right after the split;\
    ->Port busy → kill old server/tmux or fuser -k $PORT/tcp;\
    ->InceptionV3 errors → use --input-size 299 and aux_logits=False in the model init.
-9)
+9) Follow the chart:
+
                            [ GPU Server ]
                            |
                            |--> Executes partition.sh
