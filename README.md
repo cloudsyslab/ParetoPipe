@@ -165,5 +165,6 @@ ParetoPipe is an open-source framework designed to systematically benchmark and 
 2. Launch a Jupyter Notebook server:
 ```
       jupyter notebook
+```
 3. Open pareto_front.ipynb.
 4. Run the cells to load the data, process it, and generate visualizations of the performance trade-offs. 
