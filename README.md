@@ -163,7 +163,7 @@ ParetoPipe is an open-source framework designed to systematically benchmark and 
 ### 📊 Analyzing the Results
 1. Ensure the .json result files are accessible on the machine where you will run the analysis (e.g., your local machine or the GPU server).
 2. Launch a Jupyter Notebook server:
-   '''
+```
       jupyter notebook
 3. Open pareto_front.ipynb.
 4. Run the cells to load the data, process it, and generate visualizations of the performance trade-offs. 
